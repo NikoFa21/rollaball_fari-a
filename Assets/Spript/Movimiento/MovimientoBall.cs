@@ -21,6 +21,10 @@ public class MovimientoBall : MonoBehaviour
     private Vector3 cameraVelocity = Vector3.zero;
     private float yaw, pitch;
 
+    public float sprintMultiplier = 2f;
+    public float slowMultiplier = 0.5f;
+    private float currentSpeed;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -49,7 +53,7 @@ public class MovimientoBall : MonoBehaviour
         moveDirection.Normalize();
 
         // Aplicar fuerza al Rigidbody
-        rb.AddForce(moveDirection * speed, ForceMode.Force);
+        rb.AddForce(moveDirection * currentSpeed, ForceMode.Force);
 
         // Si hay movimiento, rotar la bola en la dirección deseada
         if (moveDirection.magnitude > 0)
@@ -64,6 +68,17 @@ public class MovimientoBall : MonoBehaviour
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isGrounded = false;
         }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            currentSpeed = speed * sprintMultiplier;
+        }
+
+        else if (Input.GetKey(KeyCode.LeftControl))
+        {
+            currentSpeed = speed * slowMultiplier;
+        }
+        else { currentSpeed = speed; }
     }
 
     void HandleCameraRotation()
